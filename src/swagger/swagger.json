@@ -1,0 +1,449 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Agence Voyage 221 API",
+    "version": "1.0.0",
+    "description": "API pour gérer les destinations, circuits, clients et réservations",
+    "contact": {
+      "name": "Agence Voyage 221"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Serveur de développement"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Créer un compte utilisateur",
+        "tags": ["Authentification"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password", "nom"],
+                "properties": {
+                  "email": { "type": "string", "format": "email", "example": "user@example.com" },
+                  "password": { "type": "string", "format": "password", "example": "Password123!" },
+                  "nom": { "type": "string", "example": "Diallo" },
+                  "prenom": { "type": "string", "example": "Moussa" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Utilisateur créé avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": { "description": "Email déjà utilisé ou données invalides" },
+          "500": { "description": "Erreur serveur" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Se connecter",
+        "tags": ["Authentification"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "format": "email", "example": "user@example.com" },
+                  "password": { "type": "string", "format": "password", "example": "Password123!" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connexion réussie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": { "description": "Email ou mot de passe incorrect" },
+          "500": { "description": "Erreur serveur" }
+        }
+      }
+    },
+    "/api/destinations": {
+      "post": {
+        "summary": "Créer une destination",
+        "tags": ["Destinations"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["code", "pays", "ville"],
+                "properties": {
+                  "code": { "type": "string", "example": "SEN-SL" },
+                  "pays": { "type": "string", "example": "Sénégal" },
+                  "ville": { "type": "string", "example": "Saint-Louis" },
+                  "description": { "type": "string", "example": "Belle ville historique" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Destination créée" },
+          "400": { "description": "Erreur de validation ou code déjà utilisé" }
+        }
+      },
+      "get": {
+        "summary": "Liste des destinations",
+        "tags": ["Destinations"],
+        "security": [],
+        "responses": {
+          "200": { "description": "Liste des destinations" }
+        }
+      }
+    },
+    "/api/destinations/{id}": {
+      "get": {
+        "summary": "Obtenir une destination par ID",
+        "tags": ["Destinations"],
+        "security": [],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
+        ],
+        "responses": {
+          "200": { "description": "Destination trouvée" },
+          "404": { "description": "Destination non trouvée" }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer une destination",
+        "tags": ["Destinations"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
+        ],
+        "responses": {
+          "200": { "description": "Destination supprimée" },
+          "400": { "description": "Impossible - circuits existants" },
+          "404": { "description": "Destination non trouvée" }
+        }
+      }
+    },
+    "/api/circuits": {
+      "post": {
+        "summary": "Créer un circuit",
+        "tags": ["Circuits"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nom", "destinationId", "duree", "prixParPersonne", "placesMax"],
+                "properties": {
+                  "nom": { "type": "string", "example": "Circuit Senegal" },
+                  "destinationId": { "type": "integer", "example": 1 },
+                  "duree": { "type": "integer", "example": 7 },
+                  "prixParPersonne": { "type": "number", "example": 500 },
+                  "placesMax": { "type": "integer", "example": 20 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Circuit créé" },
+          "400": { "description": "Erreur de validation ou destination inexistante" }
+        }
+      },
+      "get": {
+        "summary": "Liste des circuits",
+        "tags": ["Circuits"],
+        "security": [],
+        "responses": {
+          "200": { "description": "Liste des circuits avec destination" }
+        }
+      }
+    },
+    "/api/circuits/{id}": {
+      "get": {
+        "summary": "Obtenir un circuit par ID",
+        "tags": ["Circuits"],
+        "security": [],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
+        ],
+        "responses": {
+          "200": { "description": "Circuit trouvé" },
+          "404": { "description": "Circuit non trouvé" }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer un circuit",
+        "tags": ["Circuits"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
+        ],
+        "responses": {
+          "200": { "description": "Circuit supprimé" },
+          "400": { "description": "Impossible - réservations confirmées existantes" },
+          "404": { "description": "Circuit non trouvé" }
+        }
+      }
+    },
+    "/api/clients": {
+      "post": {
+        "summary": "Créer un client",
+        "tags": ["Clients"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["prenom", "nom", "email", "numeroPasseport"],
+                "properties": {
+                  "prenom": { "type": "string", "example": "Moussa" },
+                  "nom": { "type": "string", "example": "Diallo" },
+                  "email": { "type": "string", "example": "moussa@email.com" },
+                  "telephone": { "type": "string", "example": "+221771234567" },
+                  "numeroPasseport": { "type": "string", "example": "AB123456" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Client créé" },
+          "400": { "description": "Erreur de validation ou email déjà utilisé" }
+        }
+      },
+      "get": {
+        "summary": "Liste des clients",
+        "tags": ["Clients"],
+        "security": [],
+        "responses": {
+          "200": { "description": "Liste des clients" }
+        }
+      }
+    },
+    "/api/clients/{id}": {
+      "get": {
+        "summary": "Obtenir un client par ID",
+        "tags": ["Clients"],
+        "security": [],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
+        ],
+        "responses": {
+          "200": { "description": "Client trouvé" },
+          "404": { "description": "Client non trouvé" }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer un client",
+        "tags": ["Clients"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
+        ],
+        "responses": {
+          "200": { "description": "Client supprimé" },
+          "400": { "description": "Impossible - réservations existantes" },
+          "404": { "description": "Client non trouvé" }
+        }
+      }
+    },
+    "/api/reservations": {
+      "post": {
+        "summary": "Créer une réservation",
+        "tags": ["Réservations"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["clientId", "circuitId", "dateReservation", "nombreParticipants"],
+                "properties": {
+                  "clientId": { "type": "integer", "example": 1 },
+                  "circuitId": { "type": "integer", "example": 1 },
+                  "dateReservation": { "type": "string", "format": "date", "example": "2024-03-15" },
+                  "nombreParticipants": { "type": "integer", "example": 2 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Réservation créée" },
+          "400": { "description": "Erreur de validation, places insuffisantes, doublon, etc." }
+        }
+      },
+      "get": {
+        "summary": "Liste des réservations",
+        "tags": ["Réservations"],
+        "security": [],
+        "responses": {
+          "200": { "description": "Liste des réservations avec client et circuit" }
+        }
+      }
+    },
+    "/api/reservations/{id}": {
+      "get": {
+        "summary": "Obtenir une réservation par ID",
+        "tags": ["Réservations"],
+        "security": [],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
+        ],
+        "responses": {
+          "200": { "description": "Réservation trouvée" },
+          "404": { "description": "Réservation non trouvée" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Authentification par token JWT. Incluez le token dans l'en-tête Authorization: Bearer <token>"
+      }
+    },
+    "schemas": {
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "message": { "type": "string", "example": "Authentification réussie" },
+          "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "email": { "type": "string" },
+              "nom": { "type": "string" },
+              "prenom": { "type": "string" }
+            }
+          }
+        }
+      },
+      "Destination": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "code": { "type": "string" },
+          "pays": { "type": "string" },
+          "ville": { "type": "string" },
+          "description": { "type": "string" },
+          "createdAt": { "type": "string" },
+          "updatedAt": { "type": "string" }
+        }
+      },
+      "Circuit": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "nom": { "type": "string" },
+          "destinationId": { "type": "integer" },
+          "duree": { "type": "integer" },
+          "prixParPersonne": { "type": "number" },
+          "placesMax": { "type": "integer" },
+          "destination": { "type": "object" }
+        }
+      },
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "prenom": { "type": "string" },
+          "nom": { "type": "string" },
+          "email": { "type": "string" },
+          "telephone": { "type": "string" },
+          "numeroPasseport": { "type": "string" }
+        }
+      },
+      "Reservation": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "clientId": { "type": "integer" },
+          "circuitId": { "type": "integer" },
+          "dateReservation": { "type": "string" },
+          "nombreParticipants": { "type": "integer" },
+          "montantTotal": { "type": "number" },
+          "statut": { "type": "string", "enum": ["CONFIRMEE", "ANNULEE", "TERMINEE"] }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  password  String
+  nom       String
+  prenom    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Destination {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique
+  pays        String
+  ville       String
+  description String?
+  circuits    Circuit[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Circuit {
+  id              Int           @id @default(autoincrement())
+  nom             String
+  destinationId   Int
+  destination     Destination   @relation(fields: [destinationId], references: [id])
+  duree           Int
+  prixParPersonne Float
+  placesMax       Int
+  reservations    Reservation[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Client {
+  id              Int           @id @default(autoincrement())
+  prenom          String
+  nom             String
+  email           String        @unique
+  telephone       String?
+  numeroPasseport String
+  reservations    Reservation[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Reservation {
+  id                Int      @id @default(autoincrement())
+  clientId          Int
+  client            Client   @relation(fields: [clientId], references: [id])
+  circuitId         Int
+  circuit           Circuit  @relation(fields: [circuitId], references: [id])
+  dateReservation   DateTime
+  nombreParticipants Int
+  montantTotal      Float
+  statut            String   @default("CONFIRMEE")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
