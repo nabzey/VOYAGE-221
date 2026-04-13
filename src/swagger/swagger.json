@@ -132,7 +132,11 @@
       "get": {
         "summary": "Liste des destinations",
         "tags": ["Destinations"],
-        "security": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "responses": {
           "200": { "description": "Liste des destinations" }
         }
@@ -142,7 +146,11 @@
       "get": {
         "summary": "Obtenir une destination par ID",
         "tags": ["Destinations"],
-        "security": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
         ],
@@ -204,7 +212,11 @@
       "get": {
         "summary": "Liste des circuits",
         "tags": ["Circuits"],
-        "security": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "responses": {
           "200": { "description": "Liste des circuits avec destination" }
         }
@@ -214,7 +226,11 @@
       "get": {
         "summary": "Obtenir un circuit par ID",
         "tags": ["Circuits"],
-        "security": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "example": 1 }
         ],
