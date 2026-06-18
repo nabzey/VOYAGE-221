@@ -56,3 +56,42 @@ Accéder à la documentation: `http://localhost:3000/api-docs`
 - `POST /api/reservations` - Créer une réservation
 - `GET /api/reservations` - Liste des réservations
 - `GET /api/reservations/:id` - Une réservation
+
+
+
+docker images                          # lister les images locales
+docker pull nginx:latest               # télécharger une image
+docker build -t monapp:latest .        # builder une image depuis un Dockerfile
+docker tag monapp:latest user/monapp   # tagger une image
+docker push user/monapp:latest         # pusher sur un registry
+docker rmi monapp:latest               # supprimer une image
+
+docker ps                              # conteneurs en cours d'exécution
+docker ps -a                           # tous les conteneurs (même stoppés)
+docker run -d -p 8080:80 nginx         # lancer un conteneur en arrière-plan
+docker run -it ubuntu bash             # lancer en mode interactif
+docker stop <id>                       # arrêter un conteneur
+docker start <id>                      # redémarrer un conteneur
+docker rm <id>                         # supprimer un conteneur
+docker rm -f <id>                      # forcer la suppression
+
+
+docker logs <id>                       # voir les logs
+docker logs -f <id>                    # suivre les logs en temps réel
+docker exec -it <id> bash              # entrer dans un conteneur
+docker inspect <id>                    # infos détaillées JSON
+docker stats                           # CPU/RAM en temps réel
+
+
+docker volume ls                       # lister les volumes
+docker volume create monvolume         # créer un volume
+docker volume rm monvolume             # supprimer un volume
+docker run -v monvolume:/data nginx    # monter un volume
+
+
+docker compose up                      # lancer les services
+docker compose up -d                   # en arrière-plan
+docker compose down                    # arrêter et supprimer
+docker compose logs -f                 # suivre les logs
+docker compose ps                      # état des services
+docker compose build                   # rebuilder les images

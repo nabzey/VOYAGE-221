@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: zeynabba/voyage-221:${IMAGE_TAG:-latest}
     container_name: agence_voyage_app
     ports:
       - "3001:3000"
