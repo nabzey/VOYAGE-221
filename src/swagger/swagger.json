@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "description": "API pour gérer les destinations, circuits, clients et réservations",
     "contact": {
-      "name": "Agence Voyage 221"
+      "name": "Agence Voyage 221 avec ansible"
     }
   },
   "servers": [
