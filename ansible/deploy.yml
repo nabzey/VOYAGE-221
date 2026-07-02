@@ -1,0 +1,26 @@
+- name: Deploy Docker Compose App
+  hosts: localhost
+  become: true
+
+  vars:
+    project_path: /home/ubuntu/VOYAGE-221
+
+  tasks:
+    - name: Pull latest code
+      git:
+        repo: 'https://github.com/TON-USERNAME/VOYAGE-221.git'
+        dest: "{{ project_path }}"
+        version: main
+
+    - name: Pull Docker images
+      command: docker compose pull
+      args:
+        chdir: "{{ project_path }}"
+
+    - name: Start containers
+      command: docker compose up -d
+      args:
+        chdir: "{{ project_path }}"
+
+    - name: Clean unused images
+      command: docker image prune -f
