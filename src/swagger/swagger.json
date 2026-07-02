@@ -1,11 +1,11 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Agence Voyage 221 API",
+    "title": "Agence Voyage 221 API avec ansible",
     "version": "1.0.0",
     "description": "API pour gérer les destinations, circuits, clients et réservations",
     "contact": {
-      "name": "Agence Voyage 221 avec ansible"
+      "name": "Agence Voyage 221 "
     }
   },
   "servers": [
