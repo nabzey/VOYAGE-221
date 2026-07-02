@@ -1,5 +1,5 @@
 - name: Deploy Docker Compose App
-  hosts: localhost
+  hosts: ec2
   become: true
 
   vars:
