@@ -8,7 +8,7 @@
   tasks:
     - name: Pull latest code
       git:
-        repo: 'https://github.com/TON-USERNAME/VOYAGE-221.git'
+        repo: 'https://github.com/nabzey/VOYAGE-221.git'
         dest: "{{ project_path }}"
         version: main
 
